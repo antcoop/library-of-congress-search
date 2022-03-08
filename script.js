@@ -3,6 +3,9 @@ var inputEl = document.querySelector('#q');
 var selectEl = document.querySelector('#format');
 var resultsEl = document.querySelector('#results');
 var resultsTitleEl = document.querySelector('#results-title');
+var buttonWellEl = document.querySelector('#button-well');
+
+var recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
 
 var toJSON = function (response) {
   return response.json();
@@ -11,6 +14,34 @@ var toJSON = function (response) {
 var logData = function (data) {
   console.log(data);
 };
+
+var renderRecentSearchItems = function () {
+  var recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+  buttonWellEl.innerHTML = '';
+  for (var item of recentSearches) {
+    // <button class="btn btn-primary btn-full mx-4" type="submit">Search</button>
+    var buttonEl = document.createElement('button');
+    buttonEl.textContent = item.q;
+    buttonEl.dataset.q = item.q;
+    buttonEl.dataset.format = item.format;
+    buttonEl.className = 'btn btn-info btn-full mt-4 mx-4';
+    buttonWellEl.appendChild(buttonEl);
+  }
+};
+
+var storeRecentSearchItem = function (q, format) {
+  var obj = {
+    q: q,
+    format: format,
+  };
+  var recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+  var searchQueries = recentSearches.map(item => item.q);
+  
+  if (!searchQueries.includes(q)) {
+    var newSearches = recentSearches.concat(obj);
+    localStorage.setItem('recentSearches', JSON.stringify(newSearches));
+  }
+}
 
 var getResults = function (q, format) {
   var baseFetchURL = 'https://www.loc.gov';
@@ -32,6 +63,8 @@ var getResults = function (q, format) {
     .then(toJSON)
     .then(function (data) {
       displayResults(data, q);
+      storeRecentSearchItem(q, format);
+      renderRecentSearchItems();
     })
     .catch((err) => console.log(err));
 }
@@ -102,5 +135,14 @@ var handleSubmission = function (event) {
     location.replace('search-results.html?' + params.toString());
   }
 };
+
+buttonWellEl.addEventListener('click', function (event) {
+  event.preventDefault();
+  var target = event.target;
+  if (target.matches('button')) {
+    var dataset = event.target.dataset; 
+    getResults(dataset.q, dataset.format);
+  }
+});
 
 formEl.addEventListener('submit', handleSubmission);
