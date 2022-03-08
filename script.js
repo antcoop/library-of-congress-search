@@ -94,7 +94,12 @@ var handleSubmission = function (event) {
     inputEl.value = ''; 
     selectEl.value = '';
   } else {
-    location.replace('search-results.html?q=' + inputEl.value + '&format=' + selectEl.value);
+    // Added search parameters to bind to the url
+    var params = new URLSearchParams({
+      q: inputEl.value,
+      format: selectEl.value,
+    });
+    location.replace('search-results.html?' + params.toString());
   }
 };
 
