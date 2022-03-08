@@ -82,14 +82,17 @@ if (location.search) {
   var formatParam = locationURL.searchParams.get('format');
 
   getResults(qParam, formatParam);
+
+  inputEl.value = qParam; 
+  selectEl.value = formatParam;
 }
 
 var handleSubmission = function (event) {
   event.preventDefault();
-  console.log('INPUT', inputEl.value);
-  console.log('SELECT', selectEl.value);
   if (location.pathname.includes('search-results.html')) {
     getResults(inputEl.value, selectEl.value);
+    inputEl.value = ''; 
+    selectEl.value = '';
   } else {
     location.replace('search-results.html?q=' + inputEl.value + '&format=' + selectEl.value);
   }
