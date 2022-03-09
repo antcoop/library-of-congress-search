@@ -135,13 +135,15 @@ var handleSubmission = function (event) {
   }
 };
 
-buttonWellEl.addEventListener('click', function (event) {
-  event.preventDefault();
-  var target = event.target;
-  if (target.matches('button')) {
-    var dataset = event.target.dataset; 
-    getResults(dataset.q, dataset.format);
-  }
-});
+if (buttonWellEl) {
+  buttonWellEl.addEventListener('click', function (event) {
+    event.preventDefault();
+    var target = event.target;
+    if (target.matches('button')) {
+      var dataset = event.target.dataset; 
+      getResults(dataset.q, dataset.format);
+    }
+  });
+}
 
 formEl.addEventListener('submit', handleSubmission);
