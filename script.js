@@ -19,7 +19,6 @@ var renderRecentSearchItems = function () {
   var recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
   buttonWellEl.innerHTML = '';
   for (var item of recentSearches) {
-    // <button class="btn btn-primary btn-full mx-4" type="submit">Search</button>
     var buttonEl = document.createElement('button');
     buttonEl.textContent = item.q;
     buttonEl.dataset.q = item.q;
